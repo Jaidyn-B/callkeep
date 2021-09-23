@@ -220,7 +220,8 @@ static CXProvider* sharedProvider;
     return [uuidStr lowercaseString];
 }
 
-- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type {
+
+- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type withCompletionHandler:(nonnull void (^)(void))completion {
     // Process the received push
     NSLog(@"didReceiveIncomingPushWithPayload payload = %@", payload.type);
     /* payload example.
@@ -228,11 +229,20 @@ static CXProvider* sharedProvider;
         "uuid": "xxxxx-xxxxx-xxxxx-xxxxx",
         "caller_id": "+8618612345678",
         "caller_name": "hello",
-        "caller_id_type": "number", 
+        "caller_id_type": "number",
         "has_video": false,
     }
     */
+
     NSDictionary *dic = payload.dictionaryPayload;
+
+    if (dic[@"aps"] != nil) {
+        NSLog(@"Do not use the 'alert' format for push type %@.", payload.type);
+        if(completion != nil) {
+            completion();
+        }
+        return;
+    }
 
     NSString *uuid = dic[@"uuid"];
     NSString *callerId = dic[@"caller_id"];
@@ -254,7 +264,13 @@ static CXProvider* sharedProvider;
                 localizedCallerName:callerName
                         fromPushKit:YES
                             payload:dic
-              withCompletionHandler:^(){}];
+              withCompletionHandler:completion];
+}
+
+- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type {
+    [self pushRegistry:registry didReceiveIncomingPushWithPayload:payload forType:type withCompletionHandler:^(){
+        NSLog(@"[CallKeep] received");
+    }];
 }
 
 
