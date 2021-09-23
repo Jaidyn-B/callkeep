@@ -223,7 +223,7 @@ static CXProvider* sharedProvider;
 
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(PKPushType)type withCompletionHandler:(nonnull void (^)(void))completion {
     // Process the received push
-    NSLog(@"didReceiveIncomingPushWithPayload payload = %@", payload.type);
+    NSLog(@"didReceiveIncomingPushWithPayload payload = %@", payload.dictionaryPayload);
     /* payload example.
     {
         "uuid": "xxxxx-xxxxx-xxxxx-xxxxx",
