@@ -392,6 +392,10 @@ class FlutterCallkeep extends EventManager {
     print('[CallKeep] INFO: received event "${call.method}" ${call.arguments}');
     final data = call.arguments as Map<dynamic, dynamic>;
     switch (call.method) {
+      case 'CallKeepDidReceiveIncomingPushWithPayload':
+        print("CallKeepDidReceiveIncomingPushWithPayload: ${data['payload']}");
+        emit(CallKeepDidReceiveIncomingPushWithPayload.fromMap(data));
+        break;
       case 'CallKeepDidReceiveStartCallAction':
         emit(CallKeepDidReceiveStartCallAction.fromMap(data));
         break;

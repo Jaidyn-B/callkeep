@@ -29,6 +29,16 @@ class CallKeepDidActivateAudioSession extends EventType {
   CallKeepDidActivateAudioSession();
 }
 
+class CallKeepDidReceiveIncomingPushWithPayload extends EventType {
+  CallKeepDidReceiveIncomingPushWithPayload();
+  CallKeepDidReceiveIncomingPushWithPayload.fromMap(
+      Map<dynamic, dynamic> arguments)
+      : callUUID = arguments['callUUID'] as String,
+        payload = arguments['payload'] as Map<dynamic, dynamic>;
+  String? callUUID;
+  Map<dynamic, dynamic>? payload;
+}
+
 class CallKeepDidDeactivateAudioSession extends EventType {
   CallKeepDidDeactivateAudioSession();
 }

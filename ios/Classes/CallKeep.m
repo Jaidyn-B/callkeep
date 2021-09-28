@@ -24,6 +24,7 @@ static NSString *const CallKeepProviderReset = @"CallKeepProviderReset";
 static NSString *const CallKeepCheckReachability = @"CallKeepCheckReachability";
 static NSString *const CallKeepDidLoadWithEvents = @"CallKeepDidLoadWithEvents";
 static NSString *const CallKeepPushKitToken = @"CallKeepPushKitToken";
+static NSString *const CallKeepDidReceiveIncomingPushWithPayload = @"CallKeepDidReceiveIncomingPushWithPayload";
 
 @implementation CallKeep
 {
@@ -255,8 +256,6 @@ static CXProvider* sharedProvider;
         uuid = [self createUUID];
     }
 
-    //NSDictionary *extra = payload.dictionaryPayload[@"extra"];
-
     [CallKeep reportNewIncomingCall:uuid
                              handle:callerId
                          handleType:callerIdType
@@ -265,6 +264,8 @@ static CXProvider* sharedProvider;
                         fromPushKit:YES
                             payload:dic
               withCompletionHandler:completion];
+
+    [self sendEventWithNameWrapper:CallKeepDidReceiveIncomingPushWithPayload body:@{@"callUUID":uuid, @"payload":dic}];
 }
 
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type {
